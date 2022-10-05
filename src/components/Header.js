@@ -12,7 +12,7 @@ import { actionType } from '../context/reducer';
 const Header = () => {
     const firebaseAuth = getAuth(app);
     const provider = new GoogleAuthProvider();
-    const [{user}, dispatch] = useStateValue();
+    const [{user, cartShow, cartItems}, dispatch] = useStateValue();
     const [isMenu, setIsMenu] = useState(false);
 
     const login = async () => {
@@ -37,6 +37,13 @@ const Header = () => {
         });
     }
 
+    const showCart = () => {
+        dispatch({
+            type : actionType.SET_CART_SHOW,
+            cartShow : !cartShow,
+        });
+    }
+
     return (
         <header className='fixed z-50 w-screen p-3 px-4 bg-primary md:p-6 md:px-16'>
             {/* desktop & tablet */}
@@ -54,11 +61,13 @@ const Header = () => {
                         <li className='text-base text-textColor hover:text-headingColor transition-all ease-in-out cursor-pointer duration-100' onClick={() => setIsMenu(false)}>Services</li>
                     </motion.ul>
 
-                    <div className='relative flex items-center justify-center'>
+                    <div className='relative flex items-center justify-center' onClick={showCart}>
                         <MdShoppingBasket className='text-textColor text-2xl cursor-pointer' />
-                        <div className='absolute -top-2 -right-2 w-5 h-5 rounded-full bg-cartNumBg flex items-center justify-center'>
-                            <p className='text-xs text-white font-semibold'>2</p>
-                        </div>
+                        {cartItems && cartItems.length > 0 && (
+                            <div className='absolute -top-2 -right-2 w-5 h-5 rounded-full bg-cartNumBg flex items-center justify-center'>
+                            <p className='text-xs text-white font-semibold'>{cartItems.length}</p>
+                            </div>
+                        )}
                     </div>
 
                     <div className='relative'>
@@ -85,11 +94,13 @@ const Header = () => {
             </div>
             {/* mobile */}
             <div className='flex items-center justify-between md:hidden w-full h-full'>
-                <div className='relative flex items-center justify-center'>
+                <div className='relative flex items-center justify-center' onClick={showCart}>
                     <MdShoppingBasket className='text-textColor text-2xl cursor-pointer' />
-                    <div className='absolute -top-2 -right-2 w-5 h-5 rounded-full bg-cartNumBg flex items-center justify-center'>
-                        <p className='text-xs text-white font-semibold'>2</p>
-                    </div>
+                    {cartItems && cartItems.length > 0 && (
+                        <div className='absolute -top-2 -right-2 w-5 h-5 rounded-full bg-cartNumBg flex items-center justify-center'>
+                            <p className='text-xs text-white font-semibold'>{cartItems.length}</p>
+                        </div>
+                    )}
                 </div>
                 
                 <Link to={"/"} className='flex items-center gap-2'>
